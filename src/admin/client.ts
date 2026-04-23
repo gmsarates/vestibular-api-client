@@ -2,6 +2,33 @@ import type { JsonApiRelationship, JsonApiResource, JsonApiResponse, ClientOptio
 
 const isBrowser = typeof window !== "undefined";
 
+// Configuration state
+let configuredBaseUrl = "http://localhost:3000/api";
+let httpClientInstance: HttpClient | null = null;
+
+/**
+ * Configure the base URL for all API requests
+ * Call this once at the start of your application
+ * 
+ * @example
+ * // In your React app main.tsx or App.tsx
+ * import { setBaseUrl } from "@gmsarates/vestibular-api-client";
+ * 
+ * setBaseUrl("https://api.myserver.com");
+ */
+export function setBaseUrl(baseUrl: string): void {
+  configuredBaseUrl = baseUrl;
+  // Reset instance to use new baseUrl
+  httpClientInstance = null;
+}
+
+function getHttpClientInstance(): HttpClient {
+  if (!httpClientInstance) {
+    httpClientInstance = new HttpClient({ baseUrl: configuredBaseUrl });
+  }
+  return httpClientInstance;
+}
+
 export class HttpClient {
   private baseUrl: string;
 
@@ -161,4 +188,27 @@ export class HttpClient {
   }
 }
 
-export const httpClient = new HttpClient({ baseUrl: "http://localhost:3000/api" });
+// Proxy object that delegates to the lazy-initialized client
+export const httpClient = {
+  get<T>(path: string): Promise<T> {
+    return getHttpClientInstance().get(path);
+  },
+  getRaw<T>(path: string): Promise<T> {
+    return getHttpClientInstance().getRaw(path);
+  },
+  post<T>(path: string, body: unknown): Promise<T> {
+    return getHttpClientInstance().post(path, body);
+  },
+  postRaw<T>(path: string, body: unknown): Promise<T> {
+    return getHttpClientInstance().postRaw(path, body);
+  },
+  put<T>(path: string, body: unknown): Promise<T> {
+    return getHttpClientInstance().put(path, body);
+  },
+  delete<T>(path: string): Promise<T> {
+    return getHttpClientInstance().delete(path);
+  },
+  getBaseUrl(): string {
+    return getHttpClientInstance().getBaseUrl();
+  },
+};
