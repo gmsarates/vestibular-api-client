@@ -1,10 +1,32 @@
 {
   "name": "@gmsarates/vestibular-api-client",
   "type": "module",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Esta pasta contém toda a lógica de comunicação com a API, organizada em módulos especializados.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./admin": {
+      "types": "./dist/admin.d.ts",
+      "default": "./dist/admin.js"
+    },
+    "./app": {
+      "types": "./dist/app.d.ts",
+      "default": "./dist/app.js"
+    },
+    "./admin/*": {
+      "types": "./dist/admin/*.d.ts",
+      "default": "./dist/admin/*.js"
+    },
+    "./app/*": {
+      "types": "./dist/app/*.d.ts",
+      "default": "./dist/app/*.js"
+    }
+  },
   "files": [
     "dist"
   ],

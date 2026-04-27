@@ -1,5 +1,5 @@
-import { LoginResponse } from "../admin";
-import type { Candidate, LoginRequest, ValidateOtpRequest } from "./types";
+import type { LoginResponse } from "../admin.js";
+import type { Candidate, LoginRequest, ValidateOtpRequest } from "./types.js";
 export declare class CandidateService {
     create(data: Omit<Candidate, "id">): Promise<Candidate>;
     login(data: LoginRequest): Promise<any>;

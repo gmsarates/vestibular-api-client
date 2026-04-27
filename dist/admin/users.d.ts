@@ -1,4 +1,4 @@
-import type { User } from "./types";
+import type { User } from "./types.js";
 export declare class UserService {
     list(universityId?: string): Promise<User[]>;
     create(data: Omit<User, "id">): Promise<User>;

@@ -1,4 +1,4 @@
-import { httpClient } from "./client";
+import { httpClient } from "./client.js";
 export class CourseService {
     async list() {
         return httpClient.get("admin/course");

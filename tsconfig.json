@@ -3,9 +3,10 @@
     "outDir": "dist",
     "rootDir": "src",
     "declaration": true,
-    "module": "ESNext",
+    "module": "NodeNext",
     "target": "ES2019",
-    "moduleResolution": "Bundler",
+    "moduleResolution": "NodeNext",
+    "verbatimModuleSyntax": true,
     "strict": true
   },
   "include": ["src"]

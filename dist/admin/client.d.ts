@@ -1,4 +1,4 @@
-import type { ClientOptions } from "./types";
+import type { ClientOptions } from "./types.js";
 /**
  * Configure the base URL for all API requests
  * Call this once at the start of your application

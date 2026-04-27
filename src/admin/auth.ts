@@ -1,5 +1,5 @@
-import { httpClient } from "./client";
-import type { User, LoginResponse } from "./types";
+import { httpClient } from "./client.js";
+import type { User, LoginResponse } from "./types.js";
 
 export class AuthService {
   async login(email: string, password: string): Promise<LoginResponse> {

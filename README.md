@@ -55,6 +55,12 @@ src/
 
 ## Uso
 
+### Importar módulos (subpaths)
+```typescript
+import { authApi, candidateApi } from "@gmsarates/vestibular-api-client/admin";
+import { candidateService as appCandidateService } from "@gmsarates/vestibular-api-client/app";
+```
+
 ### Importar tipos
 ```typescript
 import type { Candidate, University, Exam, Course, User } from "@gmsarates/vestibular-api-client";

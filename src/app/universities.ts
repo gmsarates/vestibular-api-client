@@ -1,5 +1,5 @@
-import { httpClient } from "./client";
-import type { University, UniversityUpdate } from "./types";
+import { httpClient } from "./client.js";
+import type { University, UniversityUpdate } from "./types.js";
 
 export class UniversityService {
   async list(): Promise<University[]> {
