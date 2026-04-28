@@ -1,13 +1,16 @@
 import { httpClient } from "../client.js";
 export class CandidateService {
     async create(data) {
-        return httpClient.post("admin/candidate", data);
+        return httpClient.post("candidate/register", data);
     }
     async login(data) {
         return httpClient.post("candidate/auth/login", data);
     }
     async validateOtp(data) {
         return httpClient.post("candidate/auth/login/verify", data);
+    }
+    async logout() {
+        return httpClient.postRaw("candidate/me/logout", {});
     }
 }
 export const candidateService = new CandidateService();

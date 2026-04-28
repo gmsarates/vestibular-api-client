@@ -4,5 +4,6 @@ export declare class CandidateService {
     create(data: Omit<Candidate, "id">): Promise<Candidate>;
     login(data: LoginRequest): Promise<any>;
     validateOtp(data: ValidateOtpRequest): Promise<LoginResponse | any>;
+    logout(): Promise<void>;
 }
 export declare const candidateService: CandidateService;

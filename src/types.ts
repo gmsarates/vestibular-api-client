@@ -89,4 +89,5 @@ export interface LoginRequest {
 export interface ValidateOtpRequest {
   document: string;
   code: string;
+  universityId: string;
 }
