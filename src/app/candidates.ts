@@ -1,6 +1,6 @@
 import type { LoginResponse } from "../admin.js";
-import { httpClient } from "./client.js";
-import type { Candidate, LoginRequest, ValidateOtpRequest } from "./types.js";
+import { httpClient } from "../client.js";
+import type { Candidate, LoginRequest, ValidateOtpRequest } from "../types.js";
 
 export class CandidateService {
   async create(data: Omit<Candidate, "id">): Promise<Candidate> {

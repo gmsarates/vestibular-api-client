@@ -12,11 +12,11 @@ export type {
   Course,
   User,
   LoginResponse,
-} from "./admin/types.js";
+} from "./types.js";
 
 // Re-export client functionality from admin
-export { HttpClient, httpClient, setBaseUrl } from "./admin/client.js";
-export { HttpClient as AppHttpClient, httpClient as appHttpClient, setBaseUrl as appSetBaseUrl, setAppToken } from "./app/client.js";
+export { HttpClient, httpClient, setBaseUrl } from "./client.js";
+export { HttpClient as AppHttpClient, httpClient as appHttpClient, setBaseUrl as appSetBaseUrl, setAppToken } from "./client.js";
 
 // Re-export admin services (main services)
 export { AuthService, authService, authService as authApi } from "./admin/auth.js";

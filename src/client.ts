@@ -1,4 +1,4 @@
-import type { JsonApiRelationship, JsonApiResource, JsonApiResponse, ClientOptions } from "./types.js";
+import type { JsonApiRelationship, JsonApiResource, JsonApiResponse, ClientOptions } from "./types.ts";
 
 const isBrowser = typeof window !== "undefined";
 const APP_AUTH_TOKEN_STORAGE_KEY = "appAuthToken";

@@ -11,10 +11,10 @@ export type {
   Course,
   User,
   LoginResponse,
-} from "./app/types.js";
+} from "./types.js";
 
 // Client
-export { HttpClient, httpClient, setBaseUrl, setAppToken } from "./app/client.js";
+export { HttpClient, httpClient, setBaseUrl, setAppToken } from "./client.js";
 
 // Services
 export { CandidateService, candidateService, candidateService as appCandidateApi } from "./app/candidates.js";

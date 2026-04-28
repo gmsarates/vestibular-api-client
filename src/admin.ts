@@ -11,10 +11,10 @@ export type {
   Course,
   User,
   LoginResponse,
-} from "./admin/types.js";
+} from "./types.js";
 
 // Client
-export { HttpClient, httpClient, setBaseUrl } from "./admin/client.js";
+export { HttpClient, httpClient, setBaseUrl } from "./client.js";
 
 // Services
 export { AuthService, authService, authService as authApi } from "./admin/auth.js";
