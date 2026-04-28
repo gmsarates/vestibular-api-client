@@ -72,3 +72,11 @@ export interface User {
 export interface LoginResponse {
     token: string;
 }
+export interface LoginRequest {
+    document: string;
+    universityId: string;
+}
+export interface ValidateOtpRequest {
+    document: string;
+    code: string;
+}

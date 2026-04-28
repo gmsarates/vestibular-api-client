@@ -1,4 +1,25 @@
 const isBrowser = typeof window !== "undefined";
+const APP_AUTH_TOKEN_STORAGE_KEY = "appAuthToken";
+function setStoredAppToken(token) {
+    if (isBrowser) {
+        localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
+    }
+}
+function getStoredAppToken() {
+    if (!isBrowser)
+        return null;
+    return localStorage.getItem(APP_AUTH_TOKEN_STORAGE_KEY);
+}
+function clearStoredAppToken() {
+    if (isBrowser) {
+        localStorage.removeItem(APP_AUTH_TOKEN_STORAGE_KEY);
+    }
+}
+function joinUrl(baseUrl, path) {
+    const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+    const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+    return `${normalizedBase}${normalizedPath}`;
+}
 // Configuration state
 let configuredBaseUrl = "http://localhost:3000/api";
 let httpClientInstance = null;
@@ -17,6 +38,9 @@ export function setBaseUrl(baseUrl) {
     // Reset instance to use new baseUrl
     httpClientInstance = null;
 }
+export function setAppToken(token) {
+    setStoredAppToken(token);
+}
 function getHttpClientInstance() {
     if (!httpClientInstance) {
         httpClientInstance = new HttpClient({ baseUrl: configuredBaseUrl });
@@ -30,10 +54,14 @@ export class HttpClient {
     getBaseUrl() {
         return this.baseUrl;
     }
+    setAppToken(token) {
+        setStoredAppToken(token);
+    }
+    setAppRefreshToken(token) {
+        setStoredAppToken(token);
+    }
     getToken() {
-        if (!isBrowser)
-            return null;
-        return localStorage.getItem("adminAuthToken");
+        return getStoredAppToken();
     }
     getHeaders() {
         const headers = {
@@ -97,7 +125,7 @@ export class HttpClient {
     async handleResponse(response, raw = false) {
         if (response.status === 401) {
             if (isBrowser) {
-                localStorage.removeItem("adminAuthToken");
+                clearStoredAppToken();
                 window.location.href = "/login";
             }
             throw new Error("Sessão expirada");
@@ -114,7 +142,7 @@ export class HttpClient {
         return raw ? json : this.normalizeJsonApi(json);
     }
     async request(method, path, body, raw = false) {
-        const response = await fetch(`${this.baseUrl}${path}`, {
+        const response = await fetch(joinUrl(this.baseUrl, path), {
             method,
             headers: this.getHeaders(),
             body: body ? JSON.stringify(body) : undefined,
@@ -140,27 +168,13 @@ export class HttpClient {
         return this.request("DELETE", path);
     }
 }
-// Proxy object that delegates to the lazy-initialized client
-export const httpClient = {
-    get(path) {
-        return getHttpClientInstance().get(path);
+export const httpClient = new Proxy({}, {
+    get(_target, prop) {
+        const client = getHttpClientInstance();
+        const value = client[prop];
+        if (typeof value === "function") {
+            return value.bind(client);
+        }
+        return value;
     },
-    getRaw(path) {
-        return getHttpClientInstance().getRaw(path);
-    },
-    post(path, body) {
-        return getHttpClientInstance().post(path, body);
-    },
-    postRaw(path, body) {
-        return getHttpClientInstance().postRaw(path, body);
-    },
-    put(path, body) {
-        return getHttpClientInstance().put(path, body);
-    },
-    delete(path) {
-        return getHttpClientInstance().delete(path);
-    },
-    getBaseUrl() {
-        return getHttpClientInstance().getBaseUrl();
-    },
-};
+});

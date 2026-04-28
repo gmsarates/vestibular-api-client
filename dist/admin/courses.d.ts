@@ -1,4 +1,4 @@
-import type { Course } from "./types.js";
+import type { Course } from "../types.js";
 export declare class CourseService {
     list(): Promise<Course[]>;
     create(data: Omit<Course, "id">): Promise<Course>;

@@ -1,4 +1,4 @@
-import type { ClientOptions } from "./types";
+import type { ClientOptions } from "./types.ts";
 /**
  * Configure the base URL for all API requests
  * Call this once at the start of your application
@@ -10,10 +10,13 @@ import type { ClientOptions } from "./types";
  * setBaseUrl("https://api.myserver.com");
  */
 export declare function setBaseUrl(baseUrl: string): void;
+export declare function setAppToken(token: string): void;
 export declare class HttpClient {
     private baseUrl;
     constructor(options: ClientOptions);
     getBaseUrl(): string;
+    setAppToken(token: string): void;
+    setAppRefreshToken(token: string): void;
     private getToken;
     private getHeaders;
     private getIncludedMap;
@@ -28,12 +31,4 @@ export declare class HttpClient {
     put<T>(path: string, body: unknown): Promise<T>;
     delete<T>(path: string): Promise<T>;
 }
-export declare const httpClient: {
-    get<T>(path: string): Promise<T>;
-    getRaw<T>(path: string): Promise<T>;
-    post<T>(path: string, body: unknown): Promise<T>;
-    postRaw<T>(path: string, body: unknown): Promise<T>;
-    put<T>(path: string, body: unknown): Promise<T>;
-    delete<T>(path: string): Promise<T>;
-    getBaseUrl(): string;
-};
+export declare const httpClient: HttpClient;

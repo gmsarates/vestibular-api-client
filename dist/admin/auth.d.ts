@@ -1,4 +1,4 @@
-import type { User, LoginResponse } from "./types.js";
+import type { User, LoginResponse } from "../types.js";
 export declare class AuthService {
     login(email: string, password: string): Promise<LoginResponse>;
     getMe(): Promise<User>;

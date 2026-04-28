@@ -1,4 +1,4 @@
-import { httpClient } from "./client.js";
+import { httpClient } from "../client.js";
 export class AuthService {
     async login(email, password) {
         return httpClient.postRaw("admin/auth/login", {

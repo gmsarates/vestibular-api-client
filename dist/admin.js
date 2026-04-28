@@ -1,5 +1,5 @@
 // Client
-export { HttpClient, httpClient, setBaseUrl } from "./admin/client.js";
+export { HttpClient, httpClient, setBaseUrl } from "./client.js";
 // Services
 export { AuthService, authService, authService as authApi } from "./admin/auth.js";
 export { CandidateService, candidateService, candidateService as candidateApi } from "./admin/candidates.js";

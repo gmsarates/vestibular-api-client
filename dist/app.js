@@ -1,5 +1,5 @@
 // Client
-export { HttpClient, httpClient, setBaseUrl, setAppToken } from "./app/client.js";
+export { HttpClient, httpClient, setBaseUrl, setAppToken } from "./client.js";
 // Services
 export { CandidateService, candidateService, candidateService as appCandidateApi } from "./app/candidates.js";
 export { UniversityService, universityService, universityService as appUniversityApi } from "./app/universities.js";

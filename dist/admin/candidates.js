@@ -1,4 +1,4 @@
-import { httpClient } from "./client.js";
+import { httpClient } from "../client.js";
 export class CandidateService {
     async list(universityId) {
         const query = universityId

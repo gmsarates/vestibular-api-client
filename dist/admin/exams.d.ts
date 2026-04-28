@@ -1,4 +1,4 @@
-import type { Exam } from "./types.js";
+import type { Exam } from "../types.js";
 export declare class ExamService {
     list(universityId?: string): Promise<Exam[]>;
     create(data: Omit<Exam, "id">): Promise<Exam>;

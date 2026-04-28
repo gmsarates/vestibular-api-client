@@ -1,32 +1,68 @@
 import type { JsonApiRelationship, JsonApiResource, JsonApiResponse, ClientOptions } from "./types.ts";
 
 const isBrowser = typeof window !== "undefined";
-const APP_AUTH_TOKEN_STORAGE_KEY = "appAuthToken";
+var APP_AUTH_TOKEN_STORAGE_KEY = "";
+var APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = "";
+
+function setStoredAppToken(token: string | null): void {
+  if (isBrowser) {
+    if (token === null) {
+      localStorage.removeItem(APP_AUTH_TOKEN_STORAGE_KEY)
+    } else {
+      localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
+    }
+  }
+}
+
+function setStoredAppTokenExpires(timestamp: string): void {
+  if (isBrowser) {
+    localStorage.setItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY, timestamp);
+  }
+}
+
+function getStoredAppToken(): string | null {
+  if (!isBrowser) return null;
+  return localStorage.getItem(APP_AUTH_TOKEN_STORAGE_KEY);
+}
+
+function getStoredAppTokenExpires(): string | null {
+  if (!isBrowser) return null;
+  return localStorage.getItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY);
+}
+
+function clearStoredAppToken(): void {
+  if (isBrowser) {
+    localStorage.removeItem(APP_AUTH_TOKEN_STORAGE_KEY);
+  }
+}
+
+function joinUrl(baseUrl: string, path: string): string {
+  const normalizedBase = baseUrl.endsWith("/") ? baseUrl.slice(0, -1) : baseUrl;
+  const normalizedPath = path.startsWith("/") ? path : `/${path}`;
+  return `${normalizedBase}${normalizedPath}`;
+}
 
 // Configuration state
 let configuredBaseUrl = "http://localhost:3000/api";
 let httpClientInstance: HttpClient | null = null;
 
-/**
- * Configure the base URL for all API requests
- * Call this once at the start of your application
- * 
- * @example
- * // In your React app main.tsx or App.tsx
- * import { setBaseUrl } from "@gmsarates/vestibular-api-client";
- * 
- * setBaseUrl("https://api.myserver.com");
- */
 export function setBaseUrl(baseUrl: string): void {
   configuredBaseUrl = baseUrl;
   // Reset instance to use new baseUrl
   httpClientInstance = null;
 }
 
-export function setAppToken(token: string): void {
-  if (isBrowser) {
-    localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
-  }
+export function setAppToken(token: string | null): void {
+  setStoredAppToken(token)
+}
+
+export function setAppTokenExpires(timestamp: string): void {
+  setStoredAppTokenExpires(timestamp);
+}
+
+export function setAppEnv(env: string): void {
+  APP_AUTH_TOKEN_STORAGE_KEY = env + 'AuthToken';
+  APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = env + 'AuthTokenExpires';
 }
 
 function getHttpClientInstance(): HttpClient {
@@ -47,15 +83,20 @@ export class HttpClient {
     return this.baseUrl;
   }
 
-  setAppToken(token: string): void {
-    if (isBrowser) {
-      localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
-    }
+  getTokenExpires(): string | null {
+    return getStoredAppTokenExpires();
+  }
+
+  setAppToken(token: string | null): void {
+    setStoredAppToken(token);
+  }
+
+  setAppTokenExpires(timestamp: string): void {
+    setStoredAppTokenExpires(timestamp);
   }
 
   private getToken(): string | null {
-    if (!isBrowser) return null;
-    return localStorage.getItem(APP_AUTH_TOKEN_STORAGE_KEY);
+    return getStoredAppToken();
   }
 
   private getHeaders(): HeadersInit {
@@ -65,7 +106,15 @@ export class HttpClient {
     };
     const token = this.getToken();
     if (token) {
-      headers["Authorization"] = `Bearer ${token}`;
+      const expiresAt = new Date(this.getTokenExpires() ?? '2026-01-01T00:00:00')
+      const now = new Date()
+      
+      if (now > expiresAt) {
+        this.setAppToken(null)
+      } else {
+        headers["Authorization"] = `Bearer ${token}`;
+      }
+
     }
     return headers;
   }
@@ -141,7 +190,7 @@ export class HttpClient {
   ): Promise<T> {
     if (response.status === 401) {
       if (isBrowser) {
-        localStorage.removeItem("appAuthToken");
+        clearStoredAppToken();
         window.location.href = "/login";
       }
       throw new Error("Sessão expirada");
@@ -168,7 +217,7 @@ export class HttpClient {
     body?: unknown,
     raw = false
   ): Promise<T> {
-    const response = await fetch(`${this.baseUrl}${path}`, {
+    const response = await fetch(joinUrl(this.baseUrl, path), {
       method,
       headers: this.getHeaders(),
       body: body ? JSON.stringify(body) : undefined,
@@ -201,30 +250,13 @@ export class HttpClient {
   }
 }
 
-// Proxy object that delegates to the lazy-initialized client
-export const httpClient = {
-  get<T>(path: string): Promise<T> {
-    return getHttpClientInstance().get(path);
+export const httpClient: HttpClient = new Proxy({} as HttpClient, {
+  get(_target, prop) {
+    const client = getHttpClientInstance() as unknown as Record<PropertyKey, unknown>;
+    const value = client[prop];
+    if (typeof value === "function") {
+      return (value as (...args: unknown[]) => unknown).bind(client);
+    }
+    return value;
   },
-  getRaw<T>(path: string): Promise<T> {
-    return getHttpClientInstance().getRaw(path);
-  },
-  post<T>(path: string, body: unknown): Promise<T> {
-    return getHttpClientInstance().post(path, body);
-  },
-  postRaw<T>(path: string, body: unknown): Promise<T> {
-    return getHttpClientInstance().postRaw(path, body);
-  },
-  put<T>(path: string, body: unknown): Promise<T> {
-    return getHttpClientInstance().put(path, body);
-  },
-  delete<T>(path: string): Promise<T> {
-    return getHttpClientInstance().delete(path);
-  },
-  getBaseUrl(): string {
-    return getHttpClientInstance().getBaseUrl();
-  },
-  setAppToken(token: string): void {
-    getHttpClientInstance().setAppToken(token);
-  },
-};
+});

@@ -1,4 +1,4 @@
-import type { University, UniversityUpdate } from "./types.js";
+import type { University, UniversityUpdate } from "../types.js";
 export declare class UniversityService {
     list(): Promise<University[]>;
     create(data: Omit<University, "id">): Promise<University>;
