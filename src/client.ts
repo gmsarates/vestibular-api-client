@@ -210,6 +210,7 @@ export class HttpClient {
           errorMessage = ErrorMessagesEnum[key as keyof typeof ErrorMessagesEnum]
         }
       }
+      
       throw new Error(errorMessage);
     }
 

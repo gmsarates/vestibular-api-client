@@ -98,3 +98,10 @@ export interface MeResponse {
   name: string; 
   phone: string; 
 }
+
+export interface ExamUpdateRequest {
+  text?: string;
+  words_count?: number;
+  time_taken?: number;
+  tabs_count?: number
+}

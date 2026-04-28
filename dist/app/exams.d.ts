@@ -1,8 +1,7 @@
-import type { Exam } from "../types.js";
+import type { Exam, ExamUpdateRequest } from "../types.js";
 export declare class ExamService {
     list(): Promise<Exam[]>;
-    create(data: Omit<Exam, "id">): Promise<Exam>;
-    update(id: string, data: Partial<Exam>): Promise<Exam>;
-    delete(id: string): Promise<void>;
+    start(examId: string): Promise<void>;
+    update(examId: string, data: ExamUpdateRequest): Promise<void>;
 }
 export declare const examService: ExamService;
