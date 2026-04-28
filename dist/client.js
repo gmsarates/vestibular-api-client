@@ -1,8 +1,15 @@
+import { ErrorMessagesEnum } from "./enums/ErrorMessages.enum.js";
 const isBrowser = typeof window !== "undefined";
-const APP_AUTH_TOKEN_STORAGE_KEY = "appAuthToken";
+var APP_AUTH_TOKEN_STORAGE_KEY = "";
+var APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = "";
 function setStoredAppToken(token) {
     if (isBrowser) {
         localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
+    }
+}
+function setStoredAppTokenExpires(timestamp) {
+    if (isBrowser) {
+        localStorage.setItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY, timestamp);
     }
 }
 function getStoredAppToken() {
@@ -10,9 +17,15 @@ function getStoredAppToken() {
         return null;
     return localStorage.getItem(APP_AUTH_TOKEN_STORAGE_KEY);
 }
+function getStoredAppTokenExpires() {
+    if (!isBrowser)
+        return null;
+    return localStorage.getItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY);
+}
 function clearStoredAppToken() {
     if (isBrowser) {
         localStorage.removeItem(APP_AUTH_TOKEN_STORAGE_KEY);
+        localStorage.removeItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY);
     }
 }
 function joinUrl(baseUrl, path) {
@@ -23,16 +36,6 @@ function joinUrl(baseUrl, path) {
 // Configuration state
 let configuredBaseUrl = "http://localhost:3000/api";
 let httpClientInstance = null;
-/**
- * Configure the base URL for all API requests
- * Call this once at the start of your application
- *
- * @example
- * // In your React app main.tsx or App.tsx
- * import { setBaseUrl } from "@gmsarates/vestibular-api-client";
- *
- * setBaseUrl("https://api.myserver.com");
- */
 export function setBaseUrl(baseUrl) {
     configuredBaseUrl = baseUrl;
     // Reset instance to use new baseUrl
@@ -40,6 +43,16 @@ export function setBaseUrl(baseUrl) {
 }
 export function setAppToken(token) {
     setStoredAppToken(token);
+}
+export function setAppTokenExpires(timestamp) {
+    setStoredAppTokenExpires(timestamp);
+}
+export function setAppEnv(env) {
+    APP_AUTH_TOKEN_STORAGE_KEY = env + 'AuthToken';
+    APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = env + 'AuthTokenExpires';
+}
+export function clearAppToken() {
+    clearStoredAppToken();
 }
 function getHttpClientInstance() {
     if (!httpClientInstance) {
@@ -54,23 +67,34 @@ export class HttpClient {
     getBaseUrl() {
         return this.baseUrl;
     }
+    getTokenExpires() {
+        return getStoredAppTokenExpires();
+    }
     setAppToken(token) {
         setStoredAppToken(token);
     }
-    setAppRefreshToken(token) {
-        setStoredAppToken(token);
+    setAppTokenExpires(timestamp) {
+        setStoredAppTokenExpires(timestamp);
     }
     getToken() {
         return getStoredAppToken();
     }
     getHeaders() {
+        var _a;
         const headers = {
             Accept: "application/json",
             "Content-Type": "application/json",
         };
         const token = this.getToken();
         if (token) {
-            headers["Authorization"] = `Bearer ${token}`;
+            const expiresAt = new Date((_a = this.getTokenExpires()) !== null && _a !== void 0 ? _a : '2026-01-01T00:00:00');
+            const now = new Date();
+            if (now > expiresAt) {
+                clearStoredAppToken();
+            }
+            else {
+                headers["Authorization"] = `Bearer ${token}`;
+            }
         }
         return headers;
     }
@@ -123,16 +147,25 @@ export class HttpClient {
         return json;
     }
     async handleResponse(response, raw = false) {
+        var _a;
         if (response.status === 401) {
             if (isBrowser) {
                 clearStoredAppToken();
-                window.location.href = "/login";
+                // window.location.href = "/login";
             }
             throw new Error("Sessão expirada");
         }
         if (!response.ok) {
             const body = await response.json().catch(() => ({}));
-            throw new Error(body.message || `Erro ${response.status}`);
+            let errorMessage = (_a = body.message) !== null && _a !== void 0 ? _a : `Erro ${response.status}`;
+            if (body.message) {
+                let key = body.message.toString().toLowerCase().replaceAll(' ', '_');
+                console.info(key);
+                if (Object.keys(ErrorMessagesEnum).includes(key)) {
+                    errorMessage = ErrorMessagesEnum[key];
+                }
+            }
+            throw new Error(errorMessage);
         }
         const text = await response.text();
         if (text === null || text.trim() === "") {

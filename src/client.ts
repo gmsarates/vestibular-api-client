@@ -1,16 +1,13 @@
 import type { JsonApiRelationship, JsonApiResource, JsonApiResponse, ClientOptions } from "./types.ts";
+import { ErrorMessagesEnum } from "./enums/ErrorMessages.enum.js";
 
 const isBrowser = typeof window !== "undefined";
 var APP_AUTH_TOKEN_STORAGE_KEY = "";
 var APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = "";
 
-function setStoredAppToken(token: string | null): void {
+function setStoredAppToken(token: string): void {
   if (isBrowser) {
-    if (token === null) {
-      localStorage.removeItem(APP_AUTH_TOKEN_STORAGE_KEY)
-    } else {
-      localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
-    }
+    localStorage.setItem(APP_AUTH_TOKEN_STORAGE_KEY, token);
   }
 }
 
@@ -33,6 +30,7 @@ function getStoredAppTokenExpires(): string | null {
 function clearStoredAppToken(): void {
   if (isBrowser) {
     localStorage.removeItem(APP_AUTH_TOKEN_STORAGE_KEY);
+    localStorage.removeItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY);
   }
 }
 
@@ -52,7 +50,7 @@ export function setBaseUrl(baseUrl: string): void {
   httpClientInstance = null;
 }
 
-export function setAppToken(token: string | null): void {
+export function setAppToken(token: string): void {
   setStoredAppToken(token)
 }
 
@@ -63,6 +61,10 @@ export function setAppTokenExpires(timestamp: string): void {
 export function setAppEnv(env: string): void {
   APP_AUTH_TOKEN_STORAGE_KEY = env + 'AuthToken';
   APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = env + 'AuthTokenExpires';
+}
+
+export function clearAppToken() : void {
+  clearStoredAppToken()
 }
 
 function getHttpClientInstance(): HttpClient {
@@ -87,7 +89,7 @@ export class HttpClient {
     return getStoredAppTokenExpires();
   }
 
-  setAppToken(token: string | null): void {
+  setAppToken(token: string): void {
     setStoredAppToken(token);
   }
 
@@ -110,7 +112,7 @@ export class HttpClient {
       const now = new Date()
       
       if (now > expiresAt) {
-        this.setAppToken(null)
+        clearStoredAppToken()
       } else {
         headers["Authorization"] = `Bearer ${token}`;
       }
@@ -191,14 +193,24 @@ export class HttpClient {
     if (response.status === 401) {
       if (isBrowser) {
         clearStoredAppToken();
-        window.location.href = "/login";
+        // window.location.href = "/login";
       }
+
       throw new Error("Sessão expirada");
     }
 
     if (!response.ok) {
       const body = await response.json().catch(() => ({}));
-      throw new Error(body.message || `Erro ${response.status}`);
+      let errorMessage = body.message ?? `Erro ${response.status}`
+      
+      if (body.message) {
+        let key: string = body.message.toString().toLowerCase().replaceAll(' ', '_')
+        console.info(key)
+        if (Object.keys(ErrorMessagesEnum).includes(key)) {
+          errorMessage = ErrorMessagesEnum[key as keyof typeof ErrorMessagesEnum]
+        }
+      }
+      throw new Error(errorMessage);
     }
 
     const text = await response.text();

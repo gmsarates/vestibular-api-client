@@ -1,22 +1,16 @@
 import type { ClientOptions } from "./types.ts";
-/**
- * Configure the base URL for all API requests
- * Call this once at the start of your application
- *
- * @example
- * // In your React app main.tsx or App.tsx
- * import { setBaseUrl } from "@gmsarates/vestibular-api-client";
- *
- * setBaseUrl("https://api.myserver.com");
- */
 export declare function setBaseUrl(baseUrl: string): void;
 export declare function setAppToken(token: string): void;
+export declare function setAppTokenExpires(timestamp: string): void;
+export declare function setAppEnv(env: string): void;
+export declare function clearAppToken(): void;
 export declare class HttpClient {
     private baseUrl;
     constructor(options: ClientOptions);
     getBaseUrl(): string;
+    getTokenExpires(): string | null;
     setAppToken(token: string): void;
-    setAppRefreshToken(token: string): void;
+    setAppTokenExpires(timestamp: string): void;
     private getToken;
     private getHeaders;
     private getIncludedMap;

@@ -78,6 +78,7 @@ export interface User {
 
 export interface LoginResponse {
   token: string;
+  expires: string;
 }
 
 export interface LoginRequest {
