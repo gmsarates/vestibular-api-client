@@ -9,6 +9,9 @@ export class CandidateService {
     async validateOtp(data) {
         return httpClient.post("candidate/auth/login/verify", data);
     }
+    async me() {
+        return httpClient.get("candidate/me");
+    }
     async logout() {
         return httpClient.postRaw("candidate/me/logout", {});
     }

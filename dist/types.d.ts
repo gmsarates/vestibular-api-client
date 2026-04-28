@@ -75,10 +75,16 @@ export interface LoginResponse {
 }
 export interface LoginRequest {
     document: string;
-    universityId: string;
+    university_id: string;
 }
 export interface ValidateOtpRequest {
     document: string;
     code: string;
-    universityId: string;
+    university_id: string;
+}
+export interface MeResponse {
+    document: string;
+    email: string;
+    name: string;
+    phone: string;
 }

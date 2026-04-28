@@ -1,6 +1,6 @@
 import type { LoginResponse } from "../admin.js";
 import { httpClient } from "../client.js";
-import type { Candidate, LoginRequest, ValidateOtpRequest } from "../types.js";
+import type { Candidate, LoginRequest, MeResponse, ValidateOtpRequest } from "../types.js";
 
 export class CandidateService {
   async create(data: Omit<Candidate, "id">): Promise<Candidate> {
@@ -13,6 +13,10 @@ export class CandidateService {
 
   async validateOtp(data: ValidateOtpRequest): Promise<LoginResponse | any> {
     return httpClient.post<ValidateOtpRequest>("candidate/auth/login/verify", data);
+  }
+
+  async me(): Promise<MeResponse | any> {
+    return httpClient.get("candidate/me");
   }
 
   async logout(): Promise<void> {

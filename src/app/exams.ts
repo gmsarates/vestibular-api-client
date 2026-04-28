@@ -2,23 +2,9 @@ import { httpClient } from "../client.js";
 import type { Exam } from "../types.js";
 
 export class ExamService {
-  async list(universityId?: string): Promise<Exam[]> {
-    const query = universityId
-      ? `?include=university&university_id=${universityId}`
-      : "?include=university";
-    return httpClient.get<Exam[]>(`admin/exam${query}`);
-  }
-
-  async create(data: Omit<Exam, "id">): Promise<Exam> {
-    return httpClient.post<Exam>("admin/exam", data);
-  }
-
-  async update(id: string, data: Partial<Exam>): Promise<Exam> {
-    return httpClient.put<Exam>(`admin/exam/${id}`, data);
-  }
-
-  async delete(id: string): Promise<void> {
-    return httpClient.delete(`admin/exam/${id}`);
+  async list(): Promise<Exam[]> {  
+    const query = "?include=university";
+    return httpClient.get<Exam[]>(`candidate/exam${query}`);
   }
 }
 
