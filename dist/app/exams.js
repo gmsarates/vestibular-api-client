@@ -10,5 +10,8 @@ export class ExamService {
     async update(examId, data) {
         return httpClient.put(`candidate/exam/${examId}`, data);
     }
+    async submit(examId, data) {
+        return httpClient.post(`candidate/exam/${examId}/submit`, data);
+    }
 }
 export const examService = new ExamService();

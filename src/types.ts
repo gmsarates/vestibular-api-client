@@ -56,6 +56,7 @@ export interface Exam {
   max_words: number;
   can_retry: boolean;
   active: boolean;
+  attempt?: object;
 }
 
 export interface Course {
@@ -115,4 +116,9 @@ export interface ExamUpdateRequest {
   words_count?: number;
   time_taken?: number;
   tabs_count?: number
+}
+
+export interface ExamSubmitRequest {
+  attempt_id: string;
+  session_id: string;
 }
