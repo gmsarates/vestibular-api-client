@@ -1,5 +1,5 @@
 import { httpClient } from "../client.js";
-import type { Exam, ExamUpdateRequest } from "../types.js";
+import type { Exam, ExamUpdateRequest, StartExamRequest, StartExamResponse } from "../types.js";
 
 export class ExamService {
   async list(): Promise<Exam[]> {  
@@ -7,8 +7,8 @@ export class ExamService {
     return httpClient.get<Exam[]>(`candidate/exam${query}`);
   }
 
-  async start(examId: string): Promise<void> {  
-    return httpClient.post(`candidate/exam/${examId}`, {});
+  async start(examId: string, data: StartExamRequest): Promise<StartExamResponse> {  
+    return httpClient.post(`candidate/exam/${examId}`, data);
   }
 
   async update(examId: string, data: ExamUpdateRequest): Promise<void> {  

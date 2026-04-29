@@ -4,8 +4,8 @@ export class ExamService {
         const query = "?include=university";
         return httpClient.get(`candidate/exam${query}`);
     }
-    async start(examId) {
-        return httpClient.post(`candidate/exam/${examId}`, {});
+    async start(examId, data) {
+        return httpClient.post(`candidate/exam/${examId}`, data);
     }
     async update(examId, data) {
         return httpClient.put(`candidate/exam/${examId}`, data);

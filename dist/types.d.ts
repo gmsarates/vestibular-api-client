@@ -88,7 +88,16 @@ export interface MeResponse {
     name: string;
     phone: string;
 }
+export interface StartExamRequest {
+    session_id: string;
+}
+export interface StartExamResponse {
+    id: string;
+    session_id: string;
+}
 export interface ExamUpdateRequest {
+    attempt_id: string;
+    session_id: string;
     text?: string;
     words_count?: number;
     time_taken?: number;
