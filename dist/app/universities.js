@@ -1,16 +1,10 @@
 import { httpClient } from "../client.js";
-export class UniversityService {
-    async list() {
-        return httpClient.get("admin/university?include=courses,exams");
-    }
-    async create(data) {
-        return httpClient.post("admin/university", data);
-    }
-    async update(id, data) {
-        return httpClient.put(`admin/university/${id}`, data);
-    }
-    async delete(id) {
-        return httpClient.delete(`admin/university/${id}`);
+export class AppUniversityService {
+    async get(universityId) {
+        if (universityId) {
+            return httpClient.get(`candidate/university/${universityId}?include=courses,exams`);
+        }
+        return httpClient.get(`candidate/university?include=courses,exams`);
     }
 }
-export const universityService = new UniversityService();
+export const appUniversityService = new AppUniversityService();

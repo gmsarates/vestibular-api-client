@@ -1,8 +1,5 @@
-import type { University, UniversityUpdate } from "../types.js";
-export declare class UniversityService {
-    list(): Promise<University[]>;
-    create(data: Omit<University, "id">): Promise<University>;
-    update(id: string, data: UniversityUpdate): Promise<University>;
-    delete(id: string): Promise<void>;
+import type { University } from "../types.js";
+export declare class AppUniversityService {
+    get(universityId?: string): Promise<University>;
 }
-export declare const universityService: UniversityService;
+export declare const appUniversityService: AppUniversityService;

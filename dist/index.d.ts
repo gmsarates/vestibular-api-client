@@ -7,7 +7,7 @@ export { ExamService, examService, examService as examApi } from "./admin/exams.
 export { CourseService, courseService, courseService as courseApi } from "./admin/courses.js";
 export { UserService, userService, userService as userApi } from "./admin/users.js";
 export { CandidateService as AppCandidateService, candidateService as appCandidateService, candidateService as appCandidateApi } from "./app/candidates.js";
-export { UniversityService as AppUniversityService, universityService as appUniversityService, universityService as appUniversityApi } from "./app/universities.js";
+export { AppUniversityService as AppUniversityService, appUniversityService as appUniversityService, appUniversityService as appUniversityApi } from "./app/universities.js";
 export { ExamService as AppExamService, examService as appExamService, examService as appExamApi } from "./app/exams.js";
 export { CourseService as AppCourseService, courseService as appCourseService, courseService as appCourseApi } from "./app/courses.js";
 import "./admin.js";

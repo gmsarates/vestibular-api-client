@@ -1,22 +1,14 @@
 import { httpClient } from "../client.js";
-import type { University, UniversityUpdate } from "../types.js";
+import type { University } from "../types.js";
 
-export class UniversityService {
-  async list(): Promise<University[]> {
-    return httpClient.get<University[]>("admin/university?include=courses,exams");
-  }
+export class AppUniversityService {
+  async get(universityId?: string): Promise<University> {
+    if (universityId) {
+      return httpClient.get<University>(`candidate/university/${universityId}?include=courses,exams`);
+    }
 
-  async create(data: Omit<University, "id">): Promise<University> {
-    return httpClient.post<University>("admin/university", data);
-  }
-
-  async update(id: string, data: UniversityUpdate): Promise<University> {
-    return httpClient.put<University>(`admin/university/${id}`, data);
-  }
-
-  async delete(id: string): Promise<void> {
-    return httpClient.delete(`admin/university/${id}`);
+    return httpClient.get<University>(`candidate/university?include=courses,exams`);
   }
 }
 
-export const universityService = new UniversityService();
+export const appUniversityService = new AppUniversityService();

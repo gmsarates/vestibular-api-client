@@ -29,6 +29,17 @@ export interface Candidate {
   document: string;
   email: string;
   phone: string;
+  courses: Course[];
+}
+
+export interface CandidateRegister {
+  id: string;
+  university_id: string;
+  name: string;
+  document: string;
+  email: string;
+  phone: string;
+  courses: string[];
 }
 
 export interface University {
@@ -57,6 +68,22 @@ export interface Exam {
   can_retry: boolean;
   active: boolean;
   attempt?: object;
+  courses?: Course[];
+}
+
+export interface ExamUpdate {
+  university_id?: string;
+  name?: string;
+  theme?: string;
+  description?: string;
+  due_date?: string;
+  duration?: number;
+  min_words?: number;
+  max_words?: number;
+  can_retry?: boolean;
+  active?: boolean;
+  attempt?: object;
+  courses?: string[];
 }
 
 export interface Course {

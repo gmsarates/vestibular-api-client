@@ -1,5 +1,5 @@
 import { httpClient } from "../client.js";
-import type { Exam } from "../types.js";
+import type { Exam, ExamUpdate } from "../types.js";
 
 export class ExamService {
   async list(universityId?: string): Promise<Exam[]> {
@@ -13,7 +13,7 @@ export class ExamService {
     return httpClient.post<Exam>("admin/exam", data);
   }
 
-  async update(id: string, data: Partial<Exam>): Promise<Exam> {
+  async update(id: string, data: Partial<ExamUpdate>): Promise<Exam> {
     return httpClient.put<Exam>(`admin/exam/${id}`, data);
   }
 

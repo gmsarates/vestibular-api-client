@@ -1,9 +1,9 @@
 import type { LoginResponse } from "../admin.js";
 import { httpClient } from "../client.js";
-import type { Candidate, LoginRequest, MeResponse, ValidateOtpRequest } from "../types.js";
+import type { Candidate, CandidateRegister, LoginRequest, MeResponse, ValidateOtpRequest } from "../types.js";
 
 export class CandidateService {
-  async create(data: Omit<Candidate, "id">): Promise<Candidate> {
+  async create(data: Omit<CandidateRegister, "id">): Promise<Candidate> {
     return httpClient.post<Candidate>("candidate/register", data);
   }
 
