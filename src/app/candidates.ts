@@ -7,6 +7,12 @@ export class CandidateService {
     return httpClient.post<Candidate>("candidate/register", data);
   }
 
+  async loginLink(token: string, university_id: string): Promise<LoginResponse> {
+    return httpClient.post("candidate/auth/login-link", {
+      token, university_id
+    });
+  }
+
   async login(data: LoginRequest): Promise<any> {
     return httpClient.post<LoginRequest>("candidate/auth/login", data);
   }

@@ -3,6 +3,11 @@ export class CandidateService {
     async create(data) {
         return httpClient.post("candidate/register", data);
     }
+    async loginLink(token, university_id) {
+        return httpClient.post("candidate/auth/login-link", {
+            token, university_id
+        });
+    }
     async login(data) {
         return httpClient.post("candidate/auth/login", data);
     }

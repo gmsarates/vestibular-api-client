@@ -107,6 +107,8 @@ export interface User {
 export interface LoginResponse {
   token: string;
   expires: string;
+  document?: string;
+  exam_id?: string;
 }
 
 export interface LoginRequest {
