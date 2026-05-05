@@ -17,13 +17,14 @@ export type {
 } from "./types.js";
 
 // Re-export client functionality from admin
-export { HttpClient, httpClient, setBaseUrl, setAppEnv, setAppToken, setAppTokenExpires, clearAppToken } from "./client.js";
+export { HttpClient, httpClient, setBaseUrl, setAppEnv, setAppToken, setAppTokenExpires, clearAppToken, setRedirectUri } from "./client.js";
 
 // Re-export admin services (main services)
 export { AuthService, authService, authService as authApi } from "./admin/auth.js";
 export { CandidateService, candidateService, candidateService as candidateApi } from "./admin/candidates.js";
 export { UniversityService, universityService, universityService as universityApi } from "./admin/universities.js";
 export { ExamService, examService, examService as examApi } from "./admin/exams.js";
+export { AttemptService, attemptService, attemptService as attemptApi } from "./admin/attempts.js";
 export { CourseService, courseService, courseService as courseApi } from "./admin/courses.js";
 export { UserService, userService, userService as userApi } from "./admin/users.js";
 

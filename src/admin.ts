@@ -23,3 +23,5 @@ export { UniversityService, universityService, universityService as universityAp
 export { ExamService, examService, examService as examApi } from "./admin/exams.js";
 export { CourseService, courseService, courseService as courseApi } from "./admin/courses.js";
 export { UserService, userService, userService as userApi } from "./admin/users.js";
+export { AttemptService, attemptService, attemptService as attemptApi } from "./admin/attempts.js";
+

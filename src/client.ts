@@ -4,6 +4,7 @@ import { ErrorMessagesEnum } from "./enums/ErrorMessages.enum.js";
 const isBrowser = typeof window !== "undefined";
 var APP_AUTH_TOKEN_STORAGE_KEY = "";
 var APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = "";
+var APP_REDIRECT_URI_STORAGE_KEY = "";
 
 function setStoredAppToken(token: string): void {
   if (isBrowser) {
@@ -17,6 +18,12 @@ function setStoredAppTokenExpires(timestamp: string): void {
   }
 }
 
+function setStoredRedirectUri(uri: string): void {
+  if (isBrowser) {
+    localStorage.setItem(APP_REDIRECT_URI_STORAGE_KEY, uri);
+  }
+}
+
 function getStoredAppToken(): string | null {
   if (!isBrowser) return null;
   return localStorage.getItem(APP_AUTH_TOKEN_STORAGE_KEY);
@@ -25,6 +32,17 @@ function getStoredAppToken(): string | null {
 function getStoredAppTokenExpires(): string | null {
   if (!isBrowser) return null;
   return localStorage.getItem(APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY);
+}
+
+function getRedirectUri(): string | null {
+  if (!isBrowser) return null;
+  return localStorage.getItem(APP_REDIRECT_URI_STORAGE_KEY);
+}
+
+function clearStoredRedirectUri(): void {
+  if (isBrowser) {
+    localStorage.removeItem(APP_REDIRECT_URI_STORAGE_KEY);
+  }
 }
 
 function clearStoredAppToken(): void {
@@ -58,9 +76,18 @@ export function setAppTokenExpires(timestamp: string): void {
   setStoredAppTokenExpires(timestamp);
 }
 
+export function setRedirectUri(uri: string | null): void {
+  if (uri === null) {
+    clearStoredRedirectUri()
+  } else {
+    setStoredRedirectUri(uri);
+  }
+}
+
 export function setAppEnv(env: string): void {
   APP_AUTH_TOKEN_STORAGE_KEY = env + 'AuthToken';
   APP_AUTH_TOKEN_EXPIRES_STORAGE_KEY = env + 'AuthTokenExpires';
+  APP_REDIRECT_URI_STORAGE_KEY = env + 'RedirectUri';
 }
 
 export function clearAppToken() : void {
@@ -193,7 +220,10 @@ export class HttpClient {
     if (response.status === 401) {
       if (isBrowser) {
         clearStoredAppToken();
-        // window.location.href = "/login";
+        const redirect = getRedirectUri();
+        if (redirect !== null) {
+          window.location.href = redirect;
+        }
       }
 
       throw new Error("Sessão expirada");

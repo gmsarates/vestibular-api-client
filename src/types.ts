@@ -149,3 +149,24 @@ export interface ExamSubmitRequest {
   attempt_id: string;
   session_id: string;
 }
+
+export interface Attempt {
+  id: string;
+  session_id?: string;
+  candidate: Candidate;
+  exam: Exam;
+  university: University;
+  score?: number;
+  feedback?: string;
+  tabs_count?: number;
+  words_count?: number;
+  text?: string;
+  time_taken?: number;
+  status: string;
+}
+
+export interface AttemptUpdate {
+  score: number;
+  feedback: string;
+  status: string;
+}

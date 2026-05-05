@@ -18,6 +18,10 @@ export class ExamService {
   async submit(examId: string, data: ExamSubmitRequest): Promise<void> {  
     return httpClient.post(`candidate/exam/${examId}/submit`, data);
   }
+
+  async info(attemptId: string): Promise<Exam> {
+    return httpClient.get<Exam>(`candidate/exam/${attemptId}`);
+  }
 }
 
 export const examService = new ExamService();
