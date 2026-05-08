@@ -46,6 +46,7 @@ export interface University {
   id: string;
   name: string;
   slug: string;
+  url: string;
   courses?: Course[];
 }
 
