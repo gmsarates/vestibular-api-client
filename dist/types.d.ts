@@ -41,6 +41,8 @@ export interface University {
     name: string;
     slug: string;
     url: string;
+    token_openrouter: string;
+    prompt_review: string;
     courses?: Course[];
 }
 export type UniversityUpdate = {
