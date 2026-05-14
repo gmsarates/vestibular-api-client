@@ -55,6 +55,12 @@ export interface University {
 export type UniversityUpdate = {
   name?: string;
   slug?: string;
+  url?: string;
+  token_openrouter?: string;
+  prompt_review?: string;
+};
+
+export type UniversityUpdateCourses = {
   courses?: string[];
 };
 

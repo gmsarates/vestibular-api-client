@@ -1,5 +1,5 @@
 import { httpClient } from "../client.js";
-import type { Course, University, UniversityUpdate } from "../types.js";
+import type { Course, University, UniversityUpdate, UniversityUpdateCourses } from "../types.js";
 
 export class UniversityService {
   async list(): Promise<University[]> {
@@ -12,6 +12,10 @@ export class UniversityService {
 
   async update(id: string, data: UniversityUpdate): Promise<University> {
     return httpClient.put<University>(`admin/university/${id}`, data);
+  }
+
+  async updateCourses(id: string, data: UniversityUpdateCourses): Promise<University> {
+    return httpClient.put<University>(`admin/university/${id}/courses`, data);
   }
 
   async delete(id: string): Promise<void> {

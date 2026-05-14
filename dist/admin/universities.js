@@ -9,6 +9,9 @@ export class UniversityService {
     async update(id, data) {
         return httpClient.put(`admin/university/${id}`, data);
     }
+    async updateCourses(id, data) {
+        return httpClient.put(`admin/university/${id}/courses`, data);
+    }
     async delete(id) {
         return httpClient.delete(`admin/university/${id}`);
     }
