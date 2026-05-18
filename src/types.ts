@@ -30,6 +30,7 @@ export interface Candidate {
   email: string;
   phone: string;
   courses: Course[];
+  University?: University;
 }
 
 export interface CandidateRegister {
